@@ -1,11 +1,3 @@
-<!-- template-only -->
-> **This is the pristine template, not a class.**
-> If you are a student and someone sent you here by mistake, you want your own class's copy of this repository — ask your instructor for the link, and do not fork this one.
-> If you are running the activity, start with [TEACHERS.md](TEACHERS.md).
->
-> Everything below is what your students will read once you have made an instance.
-
-<!-- /template-only -->
 # Let's edit a short story together!
 
 A group activity where we each edit a line of the poem or short story.
