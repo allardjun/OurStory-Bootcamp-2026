@@ -1,0 +1,19 @@
+{
+  "name": "OurStory",
+  // The stock universal image already has git, the GitHub CLI and Python, which is everything this activity needs.
+  // Nothing is installed on anybody's own machine: a Codespace runs in the browser.
+  "image": "mcr.microsoft.com/devcontainers/universal:2-linux",
+  "postCreateCommand": "git config --global pull.rebase false && bash .devcontainer/welcome.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": ["yzhang.markdown-all-in-one"],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "workbench.startupEditor": "readme"
+      }
+    }
+  },
+  "hostRequirements": {
+    "cpus": 2
+  }
+}

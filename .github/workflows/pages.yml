@@ -1,0 +1,68 @@
+# Rebuilds the public site every time anything lands on main.
+# This is what makes the story, the blame view and the commit tree appear on a URL you can project during class.
+name: Build and publish the site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let a merge that arrives mid-build queue up rather than cancel the one in flight, so the projected page always catches up.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      is_instance: ${{ steps.which.outputs.is_instance }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # The blame page and the tree page need the whole history, not just the last commit.
+          fetch-depth: 0
+
+      - name: Is this a class instance, or the pristine template?
+        id: which
+        # GitHub Pages is switched on per instance, never on the template, so publishing from the template would always fail with a 404.
+        # The template still builds the site, so that a broken build is caught here rather than in front of a class.
+        run: |
+          name="$(head -1 instance.txt 2>/dev/null | tr -d '[:space:]')"
+          if [ -z "$name" ] || [ "$name" = "Template" ]; then
+            echo "is_instance=false" >> "$GITHUB_OUTPUT"
+            echo "This is the pristine template. The site will be built but not published."
+          else
+            echo "is_instance=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install Graphviz
+        # Draws the commit tree on the tree page. If this ever fails the build still succeeds:
+        # build.py falls back to the ASCII graph when dot is missing.
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq graphviz
+
+      - name: Build the site
+        # HOT_LINES shades a suggested editing zone on the story page. It is off by default; see TEACHERS.md.
+        run: python3 site/build.py --hot "${HOT_LINES:-0}"
+        env:
+          HOT_LINES: ${{ vars.HOT_LINES || 0 }}
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    if: needs.build.outputs.is_instance == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v5

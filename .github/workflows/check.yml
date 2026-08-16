@@ -1,0 +1,31 @@
+# The green tick or red cross that appears on every pull request.
+# Students should be able to see this run, and to see it go red when a merge conflict was resolved badly, without anyone installing anything.
+name: Check the story
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A pull request from a fork gets a read-only token, which is all this needs.
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Check the story
+        run: |
+          if [ -n "${{ github.event.pull_request.base.sha }}" ]; then
+            python3 site/check_story.py --base "${{ github.event.pull_request.base.sha }}"
+          else
+            python3 site/check_story.py
+          fi
+
+      - name: Check that the site still builds
+        run: python3 site/build.py --out /tmp/_site

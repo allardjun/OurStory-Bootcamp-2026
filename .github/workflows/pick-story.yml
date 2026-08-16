@@ -1,0 +1,40 @@
+# The push-button story vote.
+# Run this from the Actions tab once the class has voted: pick a story from the dropdown, press the green button, and the site rebuilds itself with the winner.
+name: Pick the story
+
+on:
+  workflow_dispatch:
+    inputs:
+      story:
+        description: Which story did the class vote for?
+        required: true
+        type: choice
+        options:
+          - 1-fresh-prince
+          - 2-hockey-sweater
+          - 3-magic-mitten
+          - 4-the-raven
+          - 5-cyclops
+
+permissions:
+  contents: write
+
+jobs:
+  pick:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Put the chosen story in place
+        run: |
+          set -euo pipefail
+          cp "stories/${{ inputs.story }}.md" story.md
+          if git diff --quiet -- story.md; then
+            echo "story.md is already ${{ inputs.story }}; nothing to do."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add story.md
+          git commit -m "The class voted for ${{ inputs.story }}"
+          git push
