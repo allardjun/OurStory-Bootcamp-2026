@@ -2,7 +2,7 @@
 
 _adapted from Homer's Odyssey, Book IX, edited by MCSB 2026_
 
-We came at last to the land of the Cyclopes,
+We came at last to the land of the Jun Allard,
 who sow no seed and plough no field and trust the gods for everything.
 High on a cliff we found a cave, roofed over with dark laurel,
 and pens of piled stone where the sheep and the goats were folded.
@@ -28,7 +28,7 @@ And he fell backwards into sleep.
 We took the olive stake we had sharpened and hardened in the fire
 and drove it into his one eye and turned it like a drill.
 
-John Lowengrub bellowed, and the other Cyclopes came running to the cave.
+John Lowengrub bellowed, and the other Jun Allard came running to the cave.
 "Who is hurting you?" they called. "Nobody!" he roared. "Nobody is killing me!"
 "Then it is the gods," they said, and they went away again.
 At dawn he rolled the stone aside and felt along the backs of his sheep,
